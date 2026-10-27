@@ -20,6 +20,7 @@ Coroot is an observability platform that collects telemetry through eBPF and sup
 
 | Request | Skill |
 |---|---|
+| **Start here:** paged or on call, unsure where to look, or learning how to investigate | `coroot-investigation-method` |
 | Production incident, outage, SLO violation, "why is X slow / erroring / down" | `coroot-incident-rca` |
 | Analyse a deployment or release; regression after a rollout | `coroot-deployment-analysis` |
 | CPU, memory, throttling, OOM, threads, Kubernetes requests/limits, node capacity, network/disk bottlenecks, cost, right-sizing | `coroot-resource-analysis` |

@@ -14,6 +14,8 @@ metadata:
 
 # Coroot Incident Root-Cause Analysis
 
+The overall method — narrowing from the alert through metrics, logs, and traces to the cause, and separating mitigation from fix — is in `coroot-investigation-method`. This skill covers the incident-specific workflow and report.
+
 ## Ground rules
 
 - Ground every claim in retrieved data. Separate observed facts from hypotheses; timing alone is not causality.

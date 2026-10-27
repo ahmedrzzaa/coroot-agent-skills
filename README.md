@@ -1,6 +1,6 @@
 # 🔭 Coroot Agent Skills
 
-[![Agent Skills](https://img.shields.io/badge/agent%20skills-10-8A2BE2)](#-skills)
+[![Agent Skills](https://img.shields.io/badge/agent%20skills-11-8A2BE2)](#-skills)
 [![Coroot MCP](https://img.shields.io/badge/Coroot-MCP-00B386)](https://docs.coroot.com/mcp/overview/)
 [![Works with](https://img.shields.io/badge/works%20with-Claude%20Code%20%7C%20Cursor%20%7C%20Codex-555555)](#-connect-to-coroot)
 [![GitHub stars](https://img.shields.io/github/stars/ahmedrzzaa/coroot-agent-skills?style=flat)](https://github.com/ahmedrzzaa/coroot-agent-skills/stargazers)
@@ -36,8 +36,24 @@ Teach your AI agent to investigate production systems through [Coroot](https://g
   </tr>
   <tr>
     <th colspan="2" align="center">
-      <h3><a href="#-skills">🧩 10 skills and 34 reference files, loaded only when needed!</a></h3>
+      <h3><a href="#-skills">🧩 11 skills and 37 reference files, loaded only when needed!</a></h3>
     </th>
+  </tr>
+  <tr>
+    <th colspan="2"><a href="skills/coroot-investigation-method/SKILL.md">🐺 Start here: Investigation method</a></th>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <details open><summary>Wolf fencing: halve the search space with every question</summary>
+        <ol>
+          <li><b>Read the alert fully:</b> symptom, impact, and the runbook. The service that alerts on a 504 is usually only the messenger</li>
+          <li><b>Metrics:</b> rule out traffic and saturation, then compare inbound with outbound latency hop by hop to find where the time goes</li>
+          <li><b>Logs and traces:</b> find which call in which requests, follow the trace ID, read the span that owns the time</li>
+          <li><b>Confirm</b> with an independent signal, then <b>mitigate</b> (with permission) and name the real <b>fix</b> separately</li>
+        </ol>
+      </details>
+      <img width="1800" height="1" alt="">
+    </td>
   </tr>
   <tr>
     <th><a href="skills/coroot-incident-rca/SKILL.md">🚨 Incident RCA</a></th>
@@ -291,6 +307,9 @@ Additional resources:
 
 Each skill is a folder with a `SKILL.md` and optional `references/`. Agents see only the name and description up front, load the full instructions when the skill matches, and open reference files only when needed. Each specialised skill works on its own; install `coroot-observability` alongside for the full tool map and safety rules.
 
+**🐺 Method (start here)**
+* [🐺 Investigation method <sub>`coroot-investigation-method`</sub>](skills/coroot-investigation-method/SKILL.md)
+
 **📦 Core**
 * [🧭 Observability core <sub>`coroot-observability`</sub>](skills/coroot-observability/SKILL.md)
 
@@ -315,6 +334,12 @@ Each skill is a folder with a `SKILL.md` and optional `references/`. Agents see 
 
 ```
 skills/
+├── coroot-investigation-method/
+│   ├── SKILL.md
+│   └── references/
+│       ├── failure-patterns.md
+│       ├── mitigation-and-fix.md
+│       └── signals-primer.md
 ├── coroot-observability/
 │   ├── SKILL.md
 │   └── references/
