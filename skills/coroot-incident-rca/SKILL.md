@@ -71,7 +71,7 @@ Determine whether the affected application depends on a degraded database, cache
 
 Correlate the returned timestamps, request identities, errors, and latency with the original symptom. Start from log patterns rather than raw lines, and pivot from a log entry's `trace_id` to `get_trace`. For detailed log technique, use `coroot-log-analysis`.
 
-Trace caveat: without OpenTelemetry instrumentation, trace tools return eBPF client-side spans only. A missing downstream span does not mean the downstream was not called.
+Trace caveats: without OpenTelemetry instrumentation, trace tools return eBPF client-side spans only, and a missing downstream span does not mean the downstream was not called. `traces_outliers` is a slow-band flamegraph, not a comparison with normal traffic. For detailed trace technique, use `coroot-trace-analysis`.
 
 ### 6. Compare deployments and resources
 

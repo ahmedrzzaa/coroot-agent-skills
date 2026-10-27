@@ -41,7 +41,8 @@ Tool calls use the local `coroot_*` wrappers, with the official Coroot MCP equiv
 
    Confirm names with `list_metric_names` first. Official `query_metrics` covers at most 24h per query; use `offset` to reach the pre-deployment window. For query correctness and window comparison, use `coroot-telemetry-analytics`. For interpreting CPU, memory, thread, or capacity evidence, use `coroot-resource-analysis`.
 5. **Check dependencies and placement**: `coroot_get_service_map()`, `coroot_get_nodes()` (`list_nodes`), `coroot_get_node_detail(node_name='NODE')` (`get_node_details`).
-6. **Compare and conclude** using the checklist and comparison below.
+6. **Check GitOps state** when ArgoCD or FluxCD manages the workload: sync and health status, revision changes, and failed applies via `query_metrics`. GitOps reveals changes that Coroot's ReplicaSet-based tracking misses (ConfigMaps, Secrets, StatefulSets, DaemonSets) and out-of-band manual changes. See [references/gitops.md](references/gitops.md).
+7. **Compare and conclude** using the checklist and comparison below.
 
 ## Investigation checklist
 
@@ -90,4 +91,4 @@ Report:
 6. Recommended remediation.
 7. Verification steps.
 
-For a full written report, use [references/report-template.md](references/report-template.md).
+For a full written report, use [references/report-template.md](references/report-template.md). For ArgoCD and FluxCD metrics and queries, see [references/gitops.md](references/gitops.md).

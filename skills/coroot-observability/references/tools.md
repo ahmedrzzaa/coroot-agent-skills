@@ -40,9 +40,9 @@ Served at `/mcp` on the Coroot instance. Verified against https://docs.coroot.co
 | `get_application_status` | One application's health: per-inspection issues, log-pattern samples, upstream dependencies with connectivity/RTT/latency, downstream clients. | application id |
 | `get_incident_details` | Full context on one SLO incident. | incident id |
 | `get_node_details` | One host: audit report plus CPU/memory/network sparklines. | node id |
-| `traces_summary` | Per-endpoint rps, error rate, p50/p95/p99. Pass `service` + `span` to focus on one endpoint. | `service`, `span` |
-| `traces_errors` | Top failure reasons grouped by endpoint, with `sample_trace_id` and `sample_error`. | — |
-| `traces_outliers` | Flamegraph diff of slow traces in `[dur_from..dur_to]` versus the rest (default `dur_from=1s`). | `dur_from`, `dur_to` |
+| `traces_summary` | Per-endpoint rps, error fraction, p50/p95/p99 (ms). No trace IDs. `service` + `span` match root spans only. | `service`, `span` |
+| `traces_errors` | Origin errors from the 200 most recent failing traces, grouped by endpoint, with `sample_trace_id`, `sample_error`, and `count` as a share (0–1). | `service`, `span` |
+| `traces_outliers` | Flamegraph of the 200 most recent traces in `[dur_from..dur_to]` (default `dur_from=1s`). Despite its description, **not a diff** against other traffic. | `dur_from`, `dur_to` |
 | `get_trace` | Full span tree for one request, with attributes and events. | `trace_id` |
 | `query_metrics` | Run a custom PromQL query. | PromQL expression |
 | `list_metric_names` | Discover which metrics exist. | regex filter |
@@ -68,13 +68,15 @@ From `api/mcp.go` in github.com/coroot/coroot (2026-10-21). Older servers may di
 - **`query_logs`:** `app_id`, `from`/`to`, `limit` (default 100, max 1000), `severity`, `search` (whole-token match), `log_pattern` (hash from `get_application_status`), `source`, and `max_body_length` (v1.26.5+). Newest first. See the `coroot-log-analysis` skill.
 - **`list_alerts`:** `state` = `firing` (default), `resolved`, or `any`; optional `app_id`; `limit` up to 1000.
 - **`resolve_alerts`:** the only write tool; needs the Editor role or higher and sends notifications.
-- **Trace tools:** when a project has no OpenTelemetry traces, they fall back to eBPF spans, which are single client-side spans rather than end-to-end traces.
+- **Trace tools:** `service`/`span` filters match root spans only. Only when a project has no OpenTelemetry traces at all (v1.27.1+) do they fall back to eBPF spans, which are single client-side spans rather than end-to-end traces. See the `coroot-trace-analysis` skill.
+- **Multi-cluster projects:** `query_metrics`, `list_metric_names`, and project-wide `query_logs` do not fan out to member clusters. Select the member project for PromQL and project-wide log searches.
+- **RBAC filtering:** list tools silently drop applications, alerts, and incidents the caller cannot view. An empty result can mean hidden, not absent.
 
 ### Trace drill-down order
 
 1. `traces_summary` — what is slow or failing.
 2. `traces_errors` — why requests fail.
-3. `traces_outliers` — why the tail (p95/p99) is slow.
+3. `traces_outliers` — what the slow band spends time on (call it again for a normal band to compare).
 4. `get_trace` — one request end to end, using a `trace_id` from the previous steps.
 
 ## Wrapper to official MCP mapping

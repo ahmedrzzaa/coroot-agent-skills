@@ -16,7 +16,8 @@ Do not assume every signal is available through eBPF in every environment.
 ## Where to look
 
 - Dependency map: `coroot_get_service_map()`. With the official MCP, `get_application_status` lists upstream dependencies with connectivity, RTT, and latency, plus downstream clients.
-- Dependency-level durations: `coroot_get_traces` (`traces_summary`, `traces_outliers`, `get_trace`).
+- Dependency-level durations: `coroot_get_traces` (`traces_summary`, `traces_outliers`, `get_trace`); see the `coroot-trace-analysis` skill.
+- Database-specific diagnosis (client versus server versus network): see the `coroot-database-analysis` skill.
 - Node-level network and disk: `coroot_get_node_detail(node_name='NODE')` (`get_node_details`).
 
 ## Coroot node-agent metrics

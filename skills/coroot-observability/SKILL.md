@@ -26,6 +26,9 @@ Coroot is an observability platform that collects telemetry through eBPF and sup
 | Failed Cypress/Cucumber test, CI failure, release gate | `coroot-qa-failure-diagnosis` |
 | Check logs, error patterns, error spikes, find log lines for a request or trace | `coroot-log-analysis` |
 | Write or interpret PromQL, quantify a regression, compare periods, SLO and burn-rate maths | `coroot-telemetry-analytics` |
+| Slow or failing endpoint, p95/p99 rise, error origin, reading a trace | `coroot-trace-analysis` |
+| Postgres, MySQL, MongoDB, Redis, Memcached, RDS/Cloud SQL problems | `coroot-database-analysis` |
+| Install, upgrade, configure, integrate Coroot, or connect an agent to its MCP server | `coroot-setup` |
 
 When the matching skill is not installed, apply the rules below and follow the quick triage order.
 
@@ -55,6 +58,8 @@ Do not assume every installation exposes every signal. Thread-level CPU attribut
 - Distinguish application, process, container, pod, node, and host identifiers.
 - Verify whether a metric represents a container, process, node, or whole cluster before interpreting it.
 - Do not combine measurements from different environments or unrelated time windows.
+- With a multi-cluster project selected, `query_metrics` and project-wide `query_logs` do not reach member clusters; select the member project for them.
+- MCP list tools silently drop what the caller's role cannot see. An empty result can mean hidden, not absent. See [references/configuration-concepts.md](references/configuration-concepts.md).
 
 The local `coroot_*` wrappers are not guaranteed to expose every official Coroot MCP tool or argument. Follow the actual connected tool schemas. Do not invoke undocumented wrapper arguments or assume that a similarly named official MCP tool is available locally. See [references/tools.md](references/tools.md) for both tool sets and how they map.
 
@@ -92,4 +97,5 @@ The official MCP caps responses at about 50 KB for lists and 80 KB otherwise and
 
 - [references/tools.md](references/tools.md) — local wrapper tools, official MCP tools (Community and Enterprise), the mapping between them, per-tool limits, and status codes.
 - [references/coroot-features.md](references/coroot-features.md) — architecture, inspections and default thresholds, SLOs, incidents versus alerts, tracing, profiling, service map semantics, deployments, costs, risks, AI RCA, and which of these MCP can reach. Read it when interpreting a Coroot finding or explaining why a signal is missing.
+- [references/configuration-concepts.md](references/configuration-concepts.md) — application ID kinds, application categories and their effects on SLIs and notifications, projects and multi-cluster behaviour, RBAC per MCP tool.
 - [references/official-docs.md](references/official-docs.md) — Coroot documentation links: MCP, authentication, architecture, requirements, logs, incidents, AI configuration.

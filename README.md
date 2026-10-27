@@ -1,6 +1,6 @@
 # Coroot Agent Skills
 
-Agent skills for investigating live production systems with [Coroot](https://github.com/coroot/coroot) through its MCP server: incidents, deployments, logs, metrics analytics and SLOs, CPU and memory allocation, threads, Kubernetes capacity, network and disk bottlenecks, cost, and failed QA runs.
+Agent skills for investigating live production systems with [Coroot](https://github.com/coroot/coroot) through its MCP server: incidents, deployments and GitOps, logs, traces, databases, metrics analytics and SLOs, CPU and memory allocation, threads, Kubernetes capacity, network and disk bottlenecks, cost, failed QA runs, and installing and configuring Coroot itself.
 
 Each skill is a folder with a `SKILL.md` and optional `references/`. Agents load only the skill's name and description up front. The full instructions load when the skill activates, and reference files load only when needed.
 
@@ -12,9 +12,12 @@ Each skill is a folder with a `SKILL.md` and optional `references/`. Agents load
 | [`coroot-incident-rca`](skills/coroot-incident-rca) | Outages, SLO violations, error and latency spikes, incident reports. |
 | [`coroot-log-analysis`](skills/coroot-log-analysis) | Pattern-first log triage, before/during comparison, search semantics, log-to-trace pivots, sampling and retention caveats. |
 | [`coroot-telemetry-analytics`](skills/coroot-telemetry-analytics) | Correct PromQL, RED/USE, baselines, anomaly detection, SLO and burn-rate maths, statistical traps. |
-| [`coroot-deployment-analysis`](skills/coroot-deployment-analysis) | Before/after comparison of a deployment or release; rollback decisions. |
+| [`coroot-trace-analysis`](skills/coroot-trace-analysis) | Endpoint triage, error origins, slow-band flamegraphs, reading traces; eBPF versus OpenTelemetry caveats. |
+| [`coroot-database-analysis`](skills/coroot-database-analysis) | Postgres, MySQL, MongoDB, Redis, Memcached, and managed cloud databases; database versus network versus client. |
+| [`coroot-deployment-analysis`](skills/coroot-deployment-analysis) | Before/after comparison of a deployment or release; ArgoCD/FluxCD sync state; rollback decisions. |
 | [`coroot-resource-analysis`](skills/coroot-resource-analysis) | CPU, memory, throttling, OOM, threads, Kubernetes capacity, network, disk, cost, right-sizing. |
 | [`coroot-qa-failure-diagnosis`](skills/coroot-qa-failure-diagnosis) | Failed Cypress/Cucumber tests and CI runs; observability-based release gates. |
+| [`coroot-setup`](skills/coroot-setup) | Installing, upgrading, and configuring Coroot; integrations; connecting Claude Code, Cursor, Codex, or headless agents to the MCP server. |
 
 Each specialised skill works on its own. Install `coroot-observability` alongside them for the full tool map and safety rules.
 
@@ -50,40 +53,65 @@ skills/
 ├── coroot-observability/
 │   ├── SKILL.md
 │   └── references/
-│       ├── tools.md
+│       ├── configuration-concepts.md
 │       ├── coroot-features.md
-│       └── official-docs.md
+│       ├── official-docs.md
+│       └── tools.md
 ├── coroot-incident-rca/
 │   └── SKILL.md
 ├── coroot-log-analysis/
 │   ├── SKILL.md
 │   └── references/
-│       ├── query-logs.md
-│       └── log-pipeline.md
+│       ├── log-pipeline.md
+│       └── query-logs.md
+├── coroot-trace-analysis/
+│   ├── SKILL.md
+│   └── references/
+│       ├── analysis-patterns.md
+│       ├── ebpf-vs-otel.md
+│       └── trace-tools.md
 ├── coroot-telemetry-analytics/
 │   ├── SKILL.md
 │   └── references/
+│       ├── baselines-and-anomalies.md
 │       ├── coroot-metrics.md
 │       ├── promql-rules.md
-│       ├── baselines-and-anomalies.md
 │       └── slo-burn-rate.md
+├── coroot-database-analysis/
+│   ├── SKILL.md
+│   └── references/
+│       ├── client-vs-server.md
+│       ├── managed-databases.md
+│       ├── mongodb.md
+│       ├── mysql.md
+│       ├── postgres.md
+│       └── redis-memcached.md
 ├── coroot-deployment-analysis/
 │   ├── SKILL.md
 │   └── references/
+│       ├── gitops.md
 │       └── report-template.md
 ├── coroot-resource-analysis/
 │   ├── SKILL.md
 │   └── references/
-│       ├── cpu.md
-│       ├── memory.md
-│       ├── threads-and-processes.md
-│       ├── kubernetes-capacity.md
-│       ├── network-disk-dependencies.md
 │       ├── cost-optimization.md
+│       ├── cpu.md
+│       ├── kubernetes-capacity.md
+│       ├── memory.md
 │       ├── metrics.md
-│       └── report-template.md
-└── coroot-qa-failure-diagnosis/
-    └── SKILL.md
+│       ├── network-disk-dependencies.md
+│       ├── report-template.md
+│       └── threads-and-processes.md
+├── coroot-qa-failure-diagnosis/
+│   └── SKILL.md
+└── coroot-setup/
+    ├── SKILL.md
+    └── references/
+        ├── configuration.md
+        ├── connect-agents.md
+        ├── guides.md
+        ├── install.md
+        └── integrations.md
 ```
 
 ## Adding a skill
@@ -109,4 +137,10 @@ skills/
 - Log querying: https://docs.coroot.com/logs/querying
 - Tracing: https://docs.coroot.com/tracing/overview
 - Profiling: https://docs.coroot.com/profiling/overview
+- Database monitoring: https://docs.coroot.com/databases/postgres
+- Cluster-agent metrics: https://docs.coroot.com/metrics/cluster-agent
+- GitOps monitoring: https://docs.coroot.com/gitops/overview
+- Application categories: https://docs.coroot.com/configuration/application-categories
+- Installation (Kubernetes): https://docs.coroot.com/installation/kubernetes
+- Guides: https://docs.coroot.com/guides/argocd
 - Source repository: https://github.com/coroot/coroot

@@ -56,9 +56,9 @@ These are separate objects.
 
 ## Distributed tracing
 
-- **eBPF spans:** node-agent captures outbound HTTP, Postgres, MySQL, Redis, MongoDB, and Memcached requests. Each is a single client-side span, not an end-to-end trace, with a service name like `/k8s/<namespace>/<workload>`. The MCP trace tools fall back to these spans when a project has no OpenTelemetry traces. Do not read a missing downstream span as "the downstream was not called".
+- **eBPF spans:** node-agent captures outbound HTTP, Postgres, MySQL, Redis, MongoDB, and Memcached requests. Each is a single client-side span, not an end-to-end trace, with a service name like `/k8s/<namespace>/<workload>` (the caller). The MCP trace tools use these spans only when a project has no OpenTelemetry traces at all (v1.27.1+). Do not read a missing downstream span as "the downstream was not called".
 - **OpenTelemetry SDK traces** (OTLP over HTTP) give full end-to-end trees.
-- Traces are stored in ClickHouse. The UI offers a heatmap, error-origin analysis, attribute comparison against a baseline, and a latency flamegraph diff. In MCP these are `traces_summary`, `traces_errors`, `traces_outliers`, and `get_trace`.
+- Traces are stored in ClickHouse. The UI offers a heatmap, error-origin analysis, attribute comparison against a baseline, and a latency flamegraph with a diff mode. MCP has `traces_summary` (numbers only), `traces_errors` (error origins), `traces_outliers` (slow-band flamegraph, **no diff**), and `get_trace`; the heatmap and attribute comparison have no MCP equivalent. See the `coroot-trace-analysis` skill.
 
 Sources: https://docs.coroot.com/tracing/ebpf-based-tracing, https://docs.coroot.com/tracing/overview
 
