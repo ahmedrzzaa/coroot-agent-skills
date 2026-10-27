@@ -37,7 +37,7 @@ Read only the files the question needs. Many questions span several (a latency r
 | Requests/limits versus allocatable capacity, replicas, placement, evictions | [references/kubernetes-capacity.md](references/kubernetes-capacity.md) |
 | TCP failures and retransmits, network latency, disk latency, DB/cache/DNS dependencies | [references/network-disk-dependencies.md](references/network-disk-dependencies.md) |
 | Cost, idle capacity, right-sizing | [references/cost-optimization.md](references/cost-optimization.md) |
-| Coroot node-agent metric names | [references/metrics.md](references/metrics.md) |
+| Coroot node-agent metric names and labels | [references/metrics.md](references/metrics.md) |
 | Writing the final report | [references/report-template.md](references/report-template.md) |
 
 ## Allocation is not consumption
@@ -53,7 +53,7 @@ These are different quantities. Never use them interchangeably or derive one fro
 
 1. Identify the affected application and its container and node scope.
 2. Inspect application and node health: `coroot_get_app_detail(app_id='ID')` (`get_application_status`), `coroot_get_nodes()` (`list_nodes`), `coroot_get_node_detail(node_name='NODE')` (`get_node_details`).
-3. Discover available metrics (`list_metric_names`) before writing PromQL.
+3. Discover available metrics (`list_metric_names`) before writing PromQL. For query correctness (rate before sum, ratios, percentiles, window comparison), use `coroot-telemetry-analytics`.
 4. Retrieve usage, limits/requests, and pressure signals with `coroot_query_metrics` (`query_metrics`) over the incident window and a comparable baseline.
 5. Compare against latency, error rate, and workload volume (`coroot_get_traces` / `traces_summary`).
 6. Check whether other workloads compete for the same node.

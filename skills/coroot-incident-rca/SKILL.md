@@ -47,6 +47,8 @@ Retrieve details for a matching incident:
 
 Look for the affected service, incident timestamps, available RCA, SLO violations, and resource-related findings.
 
+Coroot incidents are SLO violations, separate from alerts. An incident opens when the error or slow-request burn rate exceeds 14.4 over both 1h and 5m, or 6 over both 6h and 15m; with the default 99% objective that is more than 14.4% or 6% bad requests. Coroot counts 5xx, `failed`, and non-OK gRPC as failures, not 4xx. The incident start time is therefore when the budget burn crossed the threshold, which can be later than when the problem began.
+
 ### 3. Inspect application health
 
 `coroot_get_applications()` (`list_applications`), then for the affected application:
@@ -67,13 +69,15 @@ Determine whether the affected application depends on a degraded database, cache
 - Broader log search: `coroot_get_overview_logs(severity='Error', limit=50)` (`query_logs` project-wide)
 - Traces: the supported arguments of `coroot_get_traces` (official: `traces_summary`, then `traces_errors` or `traces_outliers`, then `get_trace` for a sample trace ID)
 
-Correlate the returned timestamps, request identities, errors, and latency with the original symptom.
+Correlate the returned timestamps, request identities, errors, and latency with the original symptom. Start from log patterns rather than raw lines, and pivot from a log entry's `trace_id` to `get_trace`. For detailed log technique, use `coroot-log-analysis`.
+
+Trace caveat: without OpenTelemetry instrumentation, trace tools return eBPF client-side spans only. A missing downstream span does not mean the downstream was not called.
 
 ### 6. Compare deployments and resources
 
 - `coroot_get_deployments(lookback_hours=24)` — not in the official MCP tool list. For a full before/after comparison, use `coroot-deployment-analysis`.
 - `coroot_get_nodes()` (`list_nodes`) and `coroot_get_node_detail(node_name='NODE')` (`get_node_details`).
-- Targeted metric queries (`coroot_query_metrics` / `query_metrics`) to establish whether the application is constrained by CPU, memory, network, disk, or another dependency. To interpret CPU, memory, throttling, thread, or capacity evidence, use `coroot-resource-analysis`.
+- Targeted metric queries (`coroot_query_metrics` / `query_metrics`) to establish whether the application is constrained by CPU, memory, network, disk, or another dependency. To interpret CPU, memory, throttling, thread, or capacity evidence, use `coroot-resource-analysis`. To quantify the change against a baseline (error ratio, percentiles, burn rate), use `coroot-telemetry-analytics`.
 
 ### 7. Inspect costs or risks only if relevant
 

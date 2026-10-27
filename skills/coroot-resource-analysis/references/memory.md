@@ -33,6 +33,8 @@ Run these only when the metrics exist; confirm names and labels first.
 |---|---|---|
 | RSS (gauge) | `container_resources_memory_rss_bytes` | `container_memory_rss` |
 | Page cache (gauge) | `container_resources_memory_cache_bytes` | — |
+| Memory limit (gauge) | `container_resources_memory_limit_bytes` | — |
+| RSS as % of limit | `100 * container_resources_memory_rss_bytes / container_resources_memory_limit_bytes` (same container selector on both sides) | — |
 | OOM kills in window | `increase(container_oom_kills_total[1h])` | — |
 | Restarts in window | `increase(container_restarts_total[1h])` | — |
 | Node total / free | `node_resources_memory_total_bytes`, `node_resources_memory_free_bytes` | — |

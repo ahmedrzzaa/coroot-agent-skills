@@ -58,6 +58,18 @@ Served at `/mcp` on the Coroot instance. Verified against https://docs.coroot.co
 
 Use Enterprise tools only if they are exposed and authorized. Do not assume a Community Edition connection or the local wrappers include them.
 
+### Per-tool limits and arguments worth knowing
+
+From `api/mcp.go` in github.com/coroot/coroot (2026-10-21). Older servers may differ; trust the advertised schema.
+
+- **All tools:** responses capped at about 50 KB for lists and 80 KB otherwise; `truncated: true` marks a cut. Every call is authorized server-side with the caller's role.
+- **`query_metrics`:** range default 1h, maximum 24h; at most 120 points per series (step widened automatically, minimum 15s); series limit default 100, maximum 1000; `$RANGE` expands to 3 × step; NaN/Inf returned as `null`.
+- **`list_metric_names`:** only metrics reported in the last 5 minutes.
+- **`query_logs`:** `app_id`, `from`/`to`, `limit` (default 100, max 1000), `severity`, `search` (whole-token match), `log_pattern` (hash from `get_application_status`), `source`, and `max_body_length` (v1.26.5+). Newest first. See the `coroot-log-analysis` skill.
+- **`list_alerts`:** `state` = `firing` (default), `resolved`, or `any`; optional `app_id`; `limit` up to 1000.
+- **`resolve_alerts`:** the only write tool; needs the Editor role or higher and sends notifications.
+- **Trace tools:** when a project has no OpenTelemetry traces, they fall back to eBPF spans, which are single client-side spans rather than end-to-end traces.
+
 ### Trace drill-down order
 
 1. `traces_summary` — what is slow or failing.

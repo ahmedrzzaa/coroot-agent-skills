@@ -1,6 +1,6 @@
 # Coroot Agent Skills
 
-Agent skills for investigating live production systems with [Coroot](https://github.com/coroot/coroot) through its MCP server: incidents, deployments, CPU and memory allocation, threads, Kubernetes capacity, network and disk bottlenecks, cost, and failed QA runs.
+Agent skills for investigating live production systems with [Coroot](https://github.com/coroot/coroot) through its MCP server: incidents, deployments, logs, metrics analytics and SLOs, CPU and memory allocation, threads, Kubernetes capacity, network and disk bottlenecks, cost, and failed QA runs.
 
 Each skill is a folder with a `SKILL.md` and optional `references/`. Agents load only the skill's name and description up front. The full instructions load when the skill activates, and reference files load only when needed.
 
@@ -8,8 +8,10 @@ Each skill is a folder with a `SKILL.md` and optional `references/`. Agents load
 
 | Skill | Use it for |
 |---|---|
-| [`coroot-observability`](skills/coroot-observability) | Core rules, tool map (local wrappers and official MCP), query limits, status codes, safety. Entry point that routes to the others. |
+| [`coroot-observability`](skills/coroot-observability) | Core rules, tool map (local wrappers and official MCP), query limits, status codes, safety, Coroot feature reference. Entry point that routes to the others. |
 | [`coroot-incident-rca`](skills/coroot-incident-rca) | Outages, SLO violations, error and latency spikes, incident reports. |
+| [`coroot-log-analysis`](skills/coroot-log-analysis) | Pattern-first log triage, before/during comparison, search semantics, log-to-trace pivots, sampling and retention caveats. |
+| [`coroot-telemetry-analytics`](skills/coroot-telemetry-analytics) | Correct PromQL, RED/USE, baselines, anomaly detection, SLO and burn-rate maths, statistical traps. |
 | [`coroot-deployment-analysis`](skills/coroot-deployment-analysis) | Before/after comparison of a deployment or release; rollback decisions. |
 | [`coroot-resource-analysis`](skills/coroot-resource-analysis) | CPU, memory, throttling, OOM, threads, Kubernetes capacity, network, disk, cost, right-sizing. |
 | [`coroot-qa-failure-diagnosis`](skills/coroot-qa-failure-diagnosis) | Failed Cypress/Cucumber tests and CI runs; observability-based release gates. |
@@ -49,9 +51,22 @@ skills/
 │   ├── SKILL.md
 │   └── references/
 │       ├── tools.md
+│       ├── coroot-features.md
 │       └── official-docs.md
 ├── coroot-incident-rca/
 │   └── SKILL.md
+├── coroot-log-analysis/
+│   ├── SKILL.md
+│   └── references/
+│       ├── query-logs.md
+│       └── log-pipeline.md
+├── coroot-telemetry-analytics/
+│   ├── SKILL.md
+│   └── references/
+│       ├── coroot-metrics.md
+│       ├── promql-rules.md
+│       ├── baselines-and-anomalies.md
+│       └── slo-burn-rate.md
 ├── coroot-deployment-analysis/
 │   ├── SKILL.md
 │   └── references/
@@ -89,4 +104,9 @@ skills/
 - Incident investigation: https://docs.coroot.com/alerting/incidents/
 - AI configuration: https://docs.coroot.com/ai/configuration/
 - Node-agent metrics: https://docs.coroot.com/metrics/node-agent
+- Inspections: https://docs.coroot.com/inspections/
+- SLO monitoring: https://docs.coroot.com/alerting/slo-monitoring
+- Log querying: https://docs.coroot.com/logs/querying
+- Tracing: https://docs.coroot.com/tracing/overview
+- Profiling: https://docs.coroot.com/profiling/overview
 - Source repository: https://github.com/coroot/coroot

@@ -24,6 +24,8 @@ Coroot is an observability platform that collects telemetry through eBPF and sup
 | Analyse a deployment or release; regression after a rollout | `coroot-deployment-analysis` |
 | CPU, memory, throttling, OOM, threads, Kubernetes requests/limits, node capacity, network/disk bottlenecks, cost, right-sizing | `coroot-resource-analysis` |
 | Failed Cypress/Cucumber test, CI failure, release gate | `coroot-qa-failure-diagnosis` |
+| Check logs, error patterns, error spikes, find log lines for a request or trace | `coroot-log-analysis` |
+| Write or interpret PromQL, quantify a regression, compare periods, SLO and burn-rate maths | `coroot-telemetry-analytics` |
 
 When the matching skill is not installed, apply the rules below and follow the quick triage order.
 
@@ -68,6 +70,8 @@ The local `coroot_*` wrappers are not guaranteed to expose every official Coroot
 
 The local wrappers document a maximum `lookback_hours` of 720 hours and a response-size limit of 120,000 characters, with metric datapoints trimmed to the most recent 120 per series. Apply these limits only to wrappers that implement them.
 
+The official MCP caps responses at about 50 KB for lists and 80 KB otherwise and sets `truncated: true` when it cuts. `query_metrics` accepts at most a 24h range and returns at most 120 points per series and 100 series by default. `list_metric_names` only sees metrics reported in the last 5 minutes. Details are in [references/tools.md](references/tools.md).
+
 - Start with a narrow time window; expand only when necessary.
 - Filter by resource, service, and severity.
 - Retrieve incident details only when relevant.
@@ -86,5 +90,6 @@ The local wrappers document a maximum `lookback_hours` of 720 hours and a respon
 
 ## References
 
-- [references/tools.md](references/tools.md) — local wrapper tools, official MCP tools (Community and Enterprise), the mapping between them, and status codes.
+- [references/tools.md](references/tools.md) — local wrapper tools, official MCP tools (Community and Enterprise), the mapping between them, per-tool limits, and status codes.
+- [references/coroot-features.md](references/coroot-features.md) — architecture, inspections and default thresholds, SLOs, incidents versus alerts, tracing, profiling, service map semantics, deployments, costs, risks, AI RCA, and which of these MCP can reach. Read it when interpreting a Coroot finding or explaining why a signal is missing.
 - [references/official-docs.md](references/official-docs.md) — Coroot documentation links: MCP, authentication, architecture, requirements, logs, incidents, AI configuration.

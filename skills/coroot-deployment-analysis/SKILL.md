@@ -28,16 +28,18 @@ Tool calls use the local `coroot_*` wrappers, with the official Coroot MCP equiv
 
 ## Workflow
 
-1. **Identify the deployment.** `coroot_get_deployments(lookback_hours=24)`. The official MCP has no deployment tool; if only it is connected, get the deployment time and version from the user or another authorized source.
+1. **Identify the deployment.** `coroot_get_deployments(lookback_hours=24)`. The official MCP has no deployment tool; if only it is connected, get the deployment time and version from the user or another authorized source. Coroot detects Kubernetes rollouts automatically (each new ReplicaSet is a version), flags a rollout as Stuck after 3 minutes, and 30 minutes after a rollout compares the new version with the previous one on SLOs, log errors, restarts, CPU, memory, and cost. That comparison is in the Coroot UI "Deployments" view, not in MCP; point the user to it.
 2. **Choose comparable windows** of equal length immediately before and after the deployment.
-3. **Collect application behavior** in both windows: `coroot_get_app_detail(app_id='ID')` (`get_application_status`), traces (`coroot_get_traces` / `traces_summary`), and error logs (`coroot_get_app_logs` / `query_logs`).
+3. **Collect application behavior** in both windows: `coroot_get_app_detail(app_id='ID')` (`get_application_status`), traces (`coroot_get_traces` / `traces_summary`), and error logs (`coroot_get_app_logs` / `query_logs`). New error log patterns that appear only after the rollout are strong evidence; see `coroot-log-analysis`.
 4. **Collect resource behavior** in both windows with `coroot_query_metrics` (`query_metrics`). Coroot node-agent metrics that usually matter:
    - `container_resources_cpu_usage_seconds_total` (use `rate()`), `container_resources_cpu_limit_cores`
    - `container_resources_cpu_throttled_seconds_total` (use `rate()`)
    - `container_resources_memory_rss_bytes`
    - `container_oom_kills_total`, `container_restarts_total` (use `increase()`)
 
-   Confirm names with `list_metric_names` first. For interpreting CPU, memory, thread, or capacity evidence, use `coroot-resource-analysis`.
+   - Request rate, error ratio, and latency: `container_http_inbound_requests_total` (label `status`) and the histogram `container_http_inbound_requests_duration_seconds_total_bucket`.
+
+   Confirm names with `list_metric_names` first. Official `query_metrics` covers at most 24h per query; use `offset` to reach the pre-deployment window. For query correctness and window comparison, use `coroot-telemetry-analytics`. For interpreting CPU, memory, thread, or capacity evidence, use `coroot-resource-analysis`.
 5. **Check dependencies and placement**: `coroot_get_service_map()`, `coroot_get_nodes()` (`list_nodes`), `coroot_get_node_detail(node_name='NODE')` (`get_node_details`).
 6. **Compare and conclude** using the checklist and comparison below.
 
